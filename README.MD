@@ -83,7 +83,10 @@ Isi dengan '10.31.2.4'
 Interfaces the DHCP relay should listen on:
 ```
 Isi dengan 'eth1 eth2 eth3'.
-Pada pertanyaan Additional options for the DHCP relay daemon:, tidak perlu diisi. Pada file /etc/default/isc-dhcp-relay konfigurasi akan terisi server dan interface seperti berikut
+<br>
+
+Pada pertanyaan Additional options for the DHCP relay daemon:, tidak perlu diisi. Lalu pada file /etc/default/isc-dhcp-relay konfigurasi untuk server dan interface akan terisi seperti berikut
+
 <img src="image\dhcp-relay.jpg">
 
 Kemudian kita restart dhcp-relay, dan untuk mengetahui dhcp-relay sudah berjalan, lihat status dengan command berikut
@@ -102,6 +105,7 @@ apt-get update
 apt-get install isc-dhcp-server -y
 ```
 Kemudian edit konfigurasi interface pada file /etc/default/isc-dhcp-server menjadi eth0
+
 <img src="image\eth0_dhcpserver.jpg">
 
 Dan pada file /etc/dhcp/dhcpd.conf tambahkan command berikut
@@ -123,5 +127,88 @@ service isc-dhcp-server status
 ```
 <img src="image\dhcp-server_running.jpg">
 
-Dengan konfigurasi dhcp diatas, maka client yang melalui switch1 yaitu SSS dan Garden sudah bisa mengakses internet.
+Dengan konfigurasi dhcp diatas, jika kita testing ip maka hasilnya seperti berikut
+
+<img src="image\ip_sss.jpg">
+
+dan client sudah bisa mengakses internet.
+
 <img src="image\ping_google_sss.jpg">
+
+
+## 4. Client yang melalui Switch3 mendapatkan range IP dari [prefix IP].3.10 - [prefix IP].3.30 dan [prefix IP].3.60 - [prefix IP].3.85 
+
+Untuk menambahkan cient yang terhubung switch3, buka file /etc/dhcp/dhcpd.conf pada westalis dan tambahkan command berikut
+```
+subnet 10.31.3.0 netmask 255.255.255.0 {
+    range 10.31.3.10 10.31.3.30;
+    range 10.31.3.60 10.31.3.85;
+    option routers 10.31.3.1;
+    option broadcast-address 10.31.3.255;
+    option domain-name-servers 10.31.2.2;
+    default-lease-time 600;
+    max-lease-time 6900;
+}
+```
+
+kemudian restart dhcp-server
+```
+service isc-dhcp-server restart
+```
+
+ip pada client switch3 seperti berikut
+
+<img src="image\ip_eden.jpg">
+
+dan client sudah bisa mengakses internet
+
+<img src="image\ping_google_eden.jpg">
+
+## 5. Client mendapatkan DNS dari WISE dan client dapat terhubung dengan internet melalui DNS tersebut.
+
+Pada file /etc/dhcp/dhcpd.conf edit konfigurasi domain-name-server menjadi seperti berikut
+
+<img src="image\domain-name-server.jpg">
+
+Kemudian lakukan instalasi bind9 pada Wise.
+```
+apt-get update
+apt-get install bind9 -y
+```
+Dan buka file /etc/bind/named.conf.options, uncomment fowarders dan edit seperti berikut
+
+<img src="image\forwarders.jpg">
+
+Kemudian restart bind9
+```
+service bind9 restart
+```
+
+Kemudian client dapat mengakses internet melalui nameserver, pada file /etc/resolv.conf hasilnya seperti berikut
+
+<img src="image\nameserver.jpg">
+
+
+## 6.	Lama waktu DHCP server meminjamkan alamat IP kepada Client yang melalui Switch1 selama 5 menit sedangkan pada client yang melalui Switch3 selama 10 menit. Dengan waktu maksimal yang dialokasikan untuk peminjaman alamat IP selama 115 menit. 
+
+Pada file /etc/dhcp/dhcpd.conf edit konfigurasi default-lease-time pada switch1 menjadi 300 dan max-lease-time menjadi 6900
+
+<img src="image\time-switch1.jpg">
+
+Kemudian pada switch3 ubah default-lease-time menjadi 600 dan max-lease-time menjadi 6900
+
+<img src="image\time-switch3.jpg">
+
+Restart dhcp-server
+```
+service isc-dhcp-server restart
+```
+
+Kemudian restart juga semua client, dan jika kita buka console salah satu client maka lease time pada client switch1 berubah 300
+
+<img src="image\lease-time_sss.jpg">
+
+dan lease-time pada client switch3 berubah 600
+
+<img src="image\lease-time_eden.jpg">
+
