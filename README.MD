@@ -212,3 +212,25 @@ dan lease-time pada client switch3 berubah 600
 
 <img src="image\lease-time_eden.jpg">
 
+## 7. Loid dan Franky berencana menjadikan Eden sebagai server untuk pertukaran informasi dengan alamat IP yang tetap dengan IP [prefix IP].3.13 
+
+Pada file /etc/dhcp/dhcpd.conf di Westalis, tambahkan konfigurasi berikut
+```
+host Eden {
+        hardware ethernet a6:e5:6b:b6:37:ed;
+        fixed-address 10.31.3.13;
+}
+```
+dan restart dhcp-server
+```
+service isc-dhcp-server restart
+```
+
+Kemudian pada network configuration Eden tambahkan 
+```
+hwaddress ether a6:e5:6b:b6:37:ed
+```
+
+Lakukan testing ip pada Eden, maka akan berubah seperti berikut
+
+<img src="image\ip_eden_3.13.jpg">
