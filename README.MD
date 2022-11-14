@@ -60,7 +60,14 @@ iface eth0 inet static
     gateway 10.31.2.1
 ```
 
-- SSS, Garden, Eden, NewstonCastle, KemonoPark (Client)
+-Eden (Fixed address client)
+```
+auto eth0
+iface eth0 inet dhcp
+hwaddress ether 12:34:56:78:9a:bc
+```
+
+- SSS, Garden, NewstonCastle, KemonoPark (Client)
 ```
 auto eth0
 iface eth0 inet dhcp
@@ -74,18 +81,21 @@ apt-get update
 apt-get install isc-dhcp-relay -y
 ```
 
-Pada saat instalasi berjalan, maka akan muncul pertanyaan seperti berikut
-```
-Servers the DHCP relay should forward requests to:
-```
-Isi dengan '10.31.2.4'
-```
-Interfaces the DHCP relay should listen on:
-```
-Isi dengan 'eth1 eth2 eth3'.
-<br>
+Pada saat instalasi berjalan, maka akan muncul pertanyaan seperti berikut, di enter enter saja (kosongan dulu tidak apa apa)
 
-Pada pertanyaan Additional options for the DHCP relay daemon:, tidak perlu diisi. Lalu pada file /etc/default/isc-dhcp-relay konfigurasi untuk server dan interface akan terisi seperti berikut
+setelah itu jalankan script dibawah ini untuk mengubah pengaturan dhcp relay
+```
+echo "
+SERVERS=\"10.31.2.4\"
+INTERFACES=\"eth1 eth2 eth3\"
+OPTIONS=
+" > /etc/default/isc-dhcp-relay
+
+echo "
+net.ipv4.ip_forward=1
+" > /etc/sysctl.conf
+```
+<br>
 
 <img src="image\dhcp-relay.jpg">
 
@@ -217,7 +227,7 @@ dan lease-time pada client switch3 berubah 600
 Pada file /etc/dhcp/dhcpd.conf di Westalis, tambahkan konfigurasi berikut
 ```
 host Eden {
-        hardware ethernet a6:e5:6b:b6:37:ed;
+        hardware ethernet 12:34:56:78:9a:bc;
         fixed-address 10.31.3.13;
 }
 ```
@@ -228,7 +238,7 @@ service isc-dhcp-server restart
 
 Kemudian pada network configuration Eden tambahkan 
 ```
-hwaddress ether a6:e5:6b:b6:37:ed
+hwaddress ether 12:34:56:78:9a:bc
 ```
 
 Lakukan testing ip pada Eden, maka akan berubah seperti berikut
