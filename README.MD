@@ -193,7 +193,7 @@ dan client sudah bisa mengakses internet
 
 Pada file /etc/dhcp/dhcpd.conf edit konfigurasi domain-name-server menjadi seperti berikut
 
-<img src="image\domain-name-server.jpg">
+![image](https://user-images.githubusercontent.com/94375772/201648077-1fad8b41-70ec-4710-8ed1-8b189a056b5f.png)
 
 Kemudian lakukan instalasi bind9 pada Wise.
 ```
