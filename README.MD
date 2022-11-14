@@ -60,7 +60,7 @@ iface eth0 inet static
     gateway 10.31.2.1
 ```
 
--Eden (Fixed address client)
+- Eden (Fixed address client)
 ```
 auto eth0
 iface eth0 inet dhcp
@@ -104,9 +104,13 @@ Kemudian kita restart dhcp-relay, dan untuk mengetahui dhcp-relay sudah berjalan
 service isc-dhcp-relay restart
 service isc-dhcp-relay status
 ```
-Untuk memastikan node-node lainnya dapat mengakses internet dapat dijalankan command berikut
+Untuk memastikan node-node lainnya dapat mengakses internet dapat dijalankan command berikut pada Ostania
 ```
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.31.0.0/16
+```
+Kemudian masukkan command berikut pada setiap node lainnya
+```
+echo nameserver 192.168.122.1 > /etc/resolv.conf
 ```
 ## 3. Loid dan Franky menyusun peta tersebut dengan hati-hati dan teliti. Ada beberapa kriteria yang ingin dibuat oleh Loid dan Franky, yaitu:
 1.	Semua client yang ada HARUS menggunakan konfigurasi IP dari DHCP Server.
