@@ -141,8 +141,10 @@ subnet 10.31.1.0 netmask 255.255.255.0 {
     default-lease-time 300;
     max-lease-time 6900;
 }
+subnet 10.31.2.0 netmask 255.255.255.0 {
+}
 ```
-![image](https://user-images.githubusercontent.com/94375772/201637206-e7eb9251-b3bf-4ed5-b3c3-c6417c9bf5cc.png)
+![image](https://user-images.githubusercontent.com/94375772/201642336-1f8f51bf-8e49-4950-9e85-dfb2c358c7bb.png)
 
 Setelah itu restart dhcp-server dan lihat status untuk mengetahui apakah dhcp-server sudah berjalan
 ```
@@ -173,10 +175,7 @@ subnet 10.31.3.0 netmask 255.255.255.0 {
     default-lease-time 600;
     max-lease-time 6900;
 }
-subnet 10.31.2.0 netmask 255.255.255.0 {
-}
 ```
-
 kemudian restart dhcp-server
 ```
 service isc-dhcp-server restart
