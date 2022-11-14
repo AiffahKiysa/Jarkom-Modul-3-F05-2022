@@ -104,10 +104,22 @@ Kemudian kita restart dhcp-relay, dan untuk mengetahui dhcp-relay sudah berjalan
 service isc-dhcp-relay restart
 service isc-dhcp-relay status
 ```
-
+Untuk memastikan node-node lainnya dapat mengakses internet dapat dijalankan command berikut
+```
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE -s 10.31.0.0/16
+```
 ## 3. Loid dan Franky menyusun peta tersebut dengan hati-hati dan teliti. Ada beberapa kriteria yang ingin dibuat oleh Loid dan Franky, yaitu:
 1.	Semua client yang ada HARUS menggunakan konfigurasi IP dari DHCP Server.
 2.	Client yang melalui Switch1 mendapatkan range IP dari [prefix IP].1.50 - [prefix IP].1.88 dan [prefix IP].1.120 - [prefix IP].1.155
+
+Sebelum melanjutkan step selanjutnya jalankan command berikut agar dapat terkoneksi ke internet
+```
+echo nameserver 192.168.122.1 > /etc/resolv.conf
+```
+IP DNS dapat di check dengan
+```
+cat /etc/resolv.conf
+```
 
 Kita perlu melakukan instalasi dhcp-server terlebih dahulu di Westalis
 ```
