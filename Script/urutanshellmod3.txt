@@ -1,0 +1,17 @@
+ostania1.sh
+berlint.sh #Jalankan selama sebelum ostania2.sh (sebleum jadi dhcp relay)
+wise.sh
+westalis.sh
+ostania2.sh
+garden1.sh
+restart garden
+garden2.sh
+restart garden
+eden.sh
+wise2.sh
+#--- Langkah ini bebas dimana selama setelah ostania2.sh & sebelum sss.sh
+berlint2.sh
+restart berlint
+Berlint : service squid start
+#---
+sss.sh #janlupa atur date saat testing
