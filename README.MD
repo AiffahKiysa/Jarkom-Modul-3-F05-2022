@@ -263,3 +263,35 @@ hwaddress ether 12:34:56:78:9a:bc
 Lakukan testing ip pada Eden, maka akan berubah seperti berikut
 
 <img src="image\ip_eden_3.13.jpg">
+
+## 8++ 
+Jalankan script dibawah ini untuk konfigurasi proxy server pada berlint
+
+```
+echo "
+http_port 8080
+visible_hostname Berlint
+acl available_hour0 time MTWHF 00:00-07:59
+acl available_hour1 time MTWHF 08:00-17:00
+acl available_hour2 time MTWHF 17:01-23:59
+acl available_hour3 time AS 00:00-23:59
+acl loid-work dstdomain loid-work.com
+acl franky-work dstdomain franky-work.com
+http_access allow loid-work available_hour1
+http_access allow franky-work available_hour2
+http_access deny all
+delay_pools 1
+delay_class 1 1
+delay_access 1 allow all available_hour3
+delay_parameters 1 16000/64000
+
+" > /etc/squid/squid.conf
+service squid restart
+```
+
+setelah itu pada client proxy jalankan command
+```
+export http_proxy="http://10.31.2.69:8080"
+```
+ip address tersebut merupakan ip address berlint dan port 8080 merupakan settingan dari proxy server pada script sebelumnya
+
